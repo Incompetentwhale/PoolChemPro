@@ -37,7 +37,7 @@ cd PoolChemPro
 ```
 # Usage 
 ```
-python main.py
+python Run.py
 ```
 The GUI allows you to input:
 - Pool Dimensions: Length, Width, and Averge depth (Deepest + Shallowest point /2)
