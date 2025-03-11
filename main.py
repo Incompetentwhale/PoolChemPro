@@ -1,128 +1,125 @@
 import tkinter as tk
-from tkinter import *
-import sys
-import os
-import time
+from Chemicals import Chemicals
 
-import TotalAlkilinity as TA
-import CalciumHardness as CH
-import Temperature as Temp
-import Chlorine as Cl
-import TDS
-import pH
-import ORP
-import Chemicals
+# Initialize Pool Dimensions (75ft x 50ft x 7.5ft)
+pool = Chemicals(75, 50, 7.5)  
 
-def main():
-    # Creating instances of classes with default values
-    ta = TA.TotalAlkilinity()  # default value 80
-    ch = CH.CalciumHardness()  # default value 200
-    temp = Temp.Temperature()  # default value 82
-    cl = Cl.Chlorine()         # default value 1.0
-    tds = TDS.TDS()            # default value 1500
-    ph = pH.pH()               # default value 7.2
-    orp = ORP.ORP()            # default value 650
-    # chems = Chemicals.Chemicals(5, 5, 5)
+# GUI setup
+root = tk.Tk()
+root.title("PoolChem Pro")
+root.geometry("400x700")
 
-    # chems.updateValues(cl.get_chlorine(), ta.get_totalAlkilinity(), ph.get_ph(), ch.get_calciumHardness(), orp.get_orp())
+# Labels and entries clearly laid out
+fields = [
+    ("Chlorine", "1"),
+    ("pH", "7.4"),
+    ("Total Alkalinity", "80"),
+    ("Calcium Hardness", "200"),
+    ("CYA", "30"),
+]
 
-    # Create tkinter
-    root = tk.Tk()
-    root.title("Pool Monitor")
-    root.geometry("500x750")
-    root.configure(bg="gray")
+entries = {}
 
-    #Create a label
-    labelCL = Label(root, text="Chlorine Level", bg="blue", fg="white")
-    entryCl = Entry(root)
-    labelCL.pack()
-    entryCl.pack()
+for label_text, default in fields:
+    label = tk.Label(root, text=label_text)
+    label.pack()
+    entry = tk.Entry(root)
+    entry.insert(0, default)
+    entry.pack()
+    entries[label_text] = entry
 
-    labelpH = Label(root, text="pH Level", bg="blue", fg="white")
-    entrypH = Entry(root)
-    labelpH.pack()
-    entrypH.pack()
-    
-    labelORP = Label(root, text="ORP Level", bg="blue", fg="white")
-    entryORP = Entry(root)
-    labelORP.pack()
-    entryORP.pack()
+# Target values for ideal chemistry
+TARGET_RANGES = {
+    "Chlorine": (1.0, 5.0),
+    "pH": (7.2, 7.8),
+    "Total Alkalinity": (80, 120),
+    "Calcium Hardness": (200, 400),
+    "CYA": (10, 30),
+}
 
-    labelTA = Label(root, text="Total Alkalinity Level", bg="blue", fg="white")
-    entryTA = Entry(root)
-    labelTA.pack()
-    entryTA.pack()
 
-    labelCH = Label(root, text="Calcium Hardness Level", bg="blue", fg="white")
-    entryCH = Entry(root)
-    labelCH.pack()
-    entryCH.pack()
-
-    labelTDS = Label(root, text="TDS Level", bg="blue", fg="white")
-    entryTDS = Entry(root)
-    labelTDS.pack()
-    entryTDS.pack()
-
-    labelTemp = Label(root, text="Temperature Level", bg="blue", fg="white")
-    entryTemp = Entry(root)
-    labelTemp.pack()
-    entryTemp.pack()
-
-    def clear():
-        entryCl.delete(0, END)
-        entrypH.delete(0, END)
-        entryORP.delete(0, END)
-        entryTA.delete(0, END)
-        entryCH.delete(0, END)
-        entryTDS.delete(0, END)
-        entryTemp.delete(0, END)
+def submit():
+    try:
+        # Read current pool measurements
+        current_values = {
+            "Chlorine": float(entries["Chlorine"].get()),
+            "pH": float(entries["pH"].get()),
+            "Total Alkalinity": float(entries["Total Alkalinity"].get()),
+            "Calcium Hardness": float(entries["Calcium Hardness"].get()),
+            "CYA": float(entries["CYA"].get()),
+        }
         
+        adjustments = {}
 
-    def submit():
-        fields = [
-            (entryTA, ta.set_totalAlkilinity, int, "Total Alkalinity"),
-            (entryCH, ch.set_calciumHardness, int, "Calcium Hardness"),
-            (entryTemp, temp.set_temperature, int, "Temperature"),
-            (entryCl, cl.set_chlorine, float, "Chlorine"),
-            (entryTDS, tds.set_tds, int, "TDS"),
-            (entrypH, ph.set_ph, float, "pH"),
-            (entryORP, orp.set_orp, int, "ORP"),
-        ]
-
-        updated_fields = []
-        failed_fields = []
-
-        for entry, setter, datatype, field_name in fields:
-            value = entry.get().strip()
-            if value:  # only update if the entry isn't empty
-                try:
-                    setter(datatype(value))
-                    updated_fields.append(field_name)
-                except ValueError:
-                    failed_fields.append(field_name)
-
-        if failed_fields:
-            print("Invalid input in the following fields:", ", ".join(failed_fields))
+        # Chlorine adjustment (this method supports both increase and reduction)
+        chlorine_min, chlorine_max = TARGET_RANGES["Chlorine"]
+        if current_values["Chlorine"] < chlorine_min:
+            # Increase chlorine
+            adjustments["Chlorine"] = pool.adjust_chlorine(current_values["Chlorine"], chlorine_min)
+        elif current_values["Chlorine"] > chlorine_max:
+            # Reduce chlorine (using same method since it returns a reduction chemical)
+            adjustments["Chlorine"] = pool.adjust_chlorine(current_values["Chlorine"], chlorine_max)
         else:
-            print("Pool levels updated successfully for:", ", ".join(updated_fields))
+            adjustments["Chlorine"] = (None, 0)
 
-        # Display current values after updates
-        print("CURRENT POOL LEVELS:")
-        print(f"Temperature: {temp.get_temperature()} °F")
-        print(f"Total Alkalinity: {ta.get_totalAlkilinity()} ppm")
-        print(f"Calcium Hardness: {ch.get_calciumHardness()} ppm")
-        print(f"Chlorine: {cl.get_chlorine()} ppm")
-        print(f"TDS: {tds.get_tds()} ppm")
-        print(f"pH: {ph.get_ph()}")
-        print(f"ORP: {orp.get_orp()} mV")
-        print("")
+        # pH adjustment (also supports both directions)
+        pH_min, pH_max = TARGET_RANGES["pH"]
+        if current_values["pH"] < pH_min:
+            adjustments["pH"] = pool.adjust_pH(current_values["pH"], pH_min)
+        elif current_values["pH"] > pH_max:
+            adjustments["pH"] = pool.adjust_pH(current_values["pH"], pH_max)
+        else:
+            adjustments["pH"] = (None, 0)
 
-    clearBTN = Button(root, text="Clear", command=clear)
-    clearBTN.pack()
-    submitBTN = Button(root, text="Submit", command=submit)
-    submitBTN.pack()
+        # Total Alkalinity adjustment (only supports increases)
+        alk_min, alk_max = TARGET_RANGES["Total Alkalinity"]
+        if current_values["Total Alkalinity"] < alk_min:
+            adjustments["Total Alkalinity"] = pool.adjust_alkalinity(current_values["Total Alkalinity"], alk_min)
+        elif current_values["Total Alkalinity"] > alk_max:
+            adjustments["Total Alkalinity"] = ("No chemical reduction available; consider partial water replacement.", 0)
+        else:
+            adjustments["Total Alkalinity"] = (None, 0)
 
-    root.mainloop()
+        # Calcium Hardness adjustment (only supports increases)
+        ch_min, ch_max = TARGET_RANGES["Calcium Hardness"]
+        if current_values["Calcium Hardness"] < ch_min:
+            adjustments["Calcium Hardness"] = pool.adjust_calcium_hardness(current_values["Calcium Hardness"], ch_min)
+        elif current_values["Calcium Hardness"] > ch_max:
+            adjustments["Calcium Hardness"] = ("No chemical reduction available; consider partial water replacement.", 0)
+        else:
+            adjustments["Calcium Hardness"] = (None, 0)
 
-if __name__ == "__main__":
-    main()
+        # CYA adjustment (only supports increases)
+        cya_min, cya_max = TARGET_RANGES["CYA"]
+        if current_values["CYA"] < cya_min:
+            adjustments["CYA"] = pool.adjust_cya(current_values["CYA"], cya_min)
+        elif current_values["CYA"] > cya_max:
+            adjustments["CYA"] = ("No chemical reduction available; consider partial water replacement.", 0)
+        else:
+            adjustments["CYA"] = (None, 0)
+
+        print("\n📌 CHEMICALS REQUIRED:")
+        for chem, (action, amount) in adjustments.items():
+            if action is None:
+                print(f"{chem}: No adjustment needed.")
+            else:
+                if amount != 0:
+                    print(f"{chem}: Add {amount} oz of {action}.")
+                else:
+                    print(f"{chem}: {action}")
+
+    except ValueError:
+        print("❌ Invalid input! Please enter numeric values.")
+
+def clear():
+    for entry in entries.values():
+        entry.delete(0, tk.END)
+
+# Buttons
+submitBTN = tk.Button(root, text="Submit", command=submit)
+submitBTN.pack(pady=5)
+
+clearBTN = tk.Button(root, text="Clear", command=clear)
+clearBTN.pack(pady=5)
+
+root.mainloop()
