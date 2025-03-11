@@ -1,6 +1,6 @@
 # PoolChem Pro
 
-PoolChem Pro is a Python-based pool chemistry calculator designed to help pool owners and maintenance professionals accurately determine the amount of chemicals required to adjust pool water parameters. With a user-friendly graphical interface built using Tkinter, PoolChem Pro dynamically calculates pool volume from user-provided dimensions and provides detailed chemical adjustment recommendations based on target ranges.
+***PoolChem Pro*** is a Python-based pool chemistry calculator designed to help pool owners and maintenance professionals accurately determine the amount of chemicals required to adjust pool water parameters. With a user-friendly graphical interface built using Tkinter, PoolChem Pro dynamically calculates pool volume from user-provided dimensions and provides detailed chemical adjustment recommendations based on target ranges.
 
 ## Features
 
