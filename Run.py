@@ -5,7 +5,6 @@ from Chemicals import Chemicals
 root = tk.Tk()
 root.title("PoolChem Pro")
 root.geometry("400x700")
-root.iconbitmap("Acid.ico")
 
 # Input fields
 fields = [
