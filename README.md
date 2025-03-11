@@ -50,3 +50,8 @@ Clears all values easily.
 
 ## Target Ranges
 **The target ranges are set to standard pool chemistry values, feel free to change at your own risk**
+
+##
+
+# Extra Files
+These files will be used to do more advanced calculations in the future along with eventually integrating with manual BECSys (7) lockouts and fail/safes. For now take a look at them and do with them what you please.
