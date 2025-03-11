@@ -4,13 +4,13 @@ from Chemicals import Chemicals
 # GUI setup
 root = tk.Tk()
 root.title("PoolChem Pro")
-root.geometry("400x700")
+root.geometry("500x750")
 
 # Input fields
 fields = [
-    ("Length", 50),
+    ("Length", 90.2),
     ("Width", 75),
-    ("Average Depth", 7.5),
+    ("Average Depth", 8.25),
     ("Chlorine", "1"),
     ("pH", "7.4"),
     ("Total Alkalinity", "80"),
@@ -68,10 +68,10 @@ def submit():
         chlorine_min, chlorine_max = TARGET_RANGES["Chlorine"]
         if current_values["Chlorine"] < chlorine_min:
             chem, amount = pool.adjust_chlorine(current_values["Chlorine"], chlorine_min)
-            adjustmentsNeedToPool.append(f"Chlorine: Add {amount} oz of {chem} to raise level to {chlorine_min} ppm.")
+            adjustmentsNeedToPool.append(f"Chlorine: Add {amount / 16} lbs of {chem} to raise level to {chlorine_min} ppm.")
         elif current_values["Chlorine"] > chlorine_max:
             chem, amount = pool.adjust_chlorine(current_values["Chlorine"], chlorine_max)
-            adjustmentsNeedToPool.append(f"Chlorine: Add {amount} oz of {chem} to lower level to {chlorine_max} ppm.")
+            adjustmentsNeedToPool.append(f"Chlorine: Add {amount / 16} lbs of {chem} to lower level to {chlorine_max} ppm.")
         else:
             adjustmentsNeedToPool.append("Chlorine: No adjustment needed.")
 
@@ -79,10 +79,10 @@ def submit():
         pH_min, pH_max = TARGET_RANGES["pH"]
         if current_values["pH"] < pH_min:
             chem, amount = pool.adjust_pH(current_values["pH"], pH_min)
-            adjustmentsNeedToPool.append(f"pH: Add {amount} oz of {chem} to raise pH to {pH_min}.")
+            adjustmentsNeedToPool.append(f"pH: Add {amount / 16} lbs of {chem} to raise pH to {pH_min}.")
         elif current_values["pH"] > pH_max:
             chem, amount = pool.adjust_pH(current_values["pH"], pH_max)
-            adjustmentsNeedToPool.append(f"pH: Add {amount} oz of {chem} to lower pH to {pH_max}.")
+            adjustmentsNeedToPool.append(f"pH: Add {amount / 128} gallons of {chem} to lower pH to {pH_max}.")
         else:
             adjustmentsNeedToPool.append("pH: No adjustment needed.")
 
@@ -90,7 +90,7 @@ def submit():
         alk_min, alk_max = TARGET_RANGES["Total Alkalinity"]
         if current_values["Total Alkalinity"] < alk_min:
             chem, amount = pool.adjust_alkalinity(current_values["Total Alkalinity"], alk_min)
-            adjustmentsNeedToPool.append(f"Total Alkalinity: Add {amount} oz of {chem} to raise alkalinity to {alk_min} ppm.")
+            adjustmentsNeedToPool.append(f"Total Alkalinity: Add {amount / 16} lbs of {chem} to raise alkalinity to {alk_min} ppm.")
         elif current_values["Total Alkalinity"] > alk_max:
             adjustmentsNeedToPool.append("Total Alkalinity: High level. Consider dilution or partial water replacement.")
         else:
