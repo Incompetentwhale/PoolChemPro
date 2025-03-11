@@ -22,48 +22,48 @@ def main():
     tds = TDS.TDS()            # default value 1500
     ph = pH.pH()               # default value 7.2
     orp = ORP.ORP()            # default value 650
-    chems = Chemicals.Chemicals()
+    chems = Chemicals.Chemicals(5, 5, 5)
 
-    chems.updateValues(cl.get_chlorine(), ta.get_totalAlkilinity(), ph.get_ph(), ch.get_calciumHardness(), orp.get_orp())
+    # chems.updateValues(cl.get_chlorine(), ta.get_totalAlkilinity(), ph.get_ph(), ch.get_calciumHardness(), orp.get_orp())
 
     # Create tkinter
     root = tk.Tk()
     root.title("Pool Monitor")
     root.geometry("500x750")
-    root.configure(bg="white")
+    root.configure(bg="gray")
 
     #Create a label
-    labelCL = Label(root, text="Chlorine Level", bg="black")
+    labelCL = Label(root, text="Chlorine Level", bg="blue", fg="white")
     entryCl = Entry(root)
     labelCL.pack()
     entryCl.pack()
 
-    labelpH = Label(root, text="pH Level", bg="black")
+    labelpH = Label(root, text="pH Level", bg="blue", fg="white")
     entrypH = Entry(root)
     labelpH.pack()
     entrypH.pack()
     
-    labelORP = Label(root, text="ORP Level", bg="black")
+    labelORP = Label(root, text="ORP Level", bg="blue", fg="white")
     entryORP = Entry(root)
     labelORP.pack()
     entryORP.pack()
 
-    labelTA = Label(root, text="Total Alkalinity Level", bg="black")
+    labelTA = Label(root, text="Total Alkalinity Level", bg="blue", fg="white")
     entryTA = Entry(root)
     labelTA.pack()
     entryTA.pack()
 
-    labelCH = Label(root, text="Calcium Hardness Level", bg="black")
+    labelCH = Label(root, text="Calcium Hardness Level", bg="blue", fg="white")
     entryCH = Entry(root)
     labelCH.pack()
     entryCH.pack()
 
-    labelTDS = Label(root, text="TDS Level", bg="black")
+    labelTDS = Label(root, text="TDS Level", bg="blue", fg="white")
     entryTDS = Entry(root)
     labelTDS.pack()
     entryTDS.pack()
 
-    labelTemp = Label(root, text="Temperature Level", bg="black")
+    labelTemp = Label(root, text="Temperature Level", bg="blue", fg="white")
     entryTemp = Entry(root)
     labelTemp.pack()
     entryTemp.pack()
