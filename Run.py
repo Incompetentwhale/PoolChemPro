@@ -48,7 +48,7 @@ def submit():
     width = float(entries["Width"].get())
     depth = float(entries["Average Depth"].get())
     pool = Chemicals(length, width, depth)
-    # Clear previous dynamic labels
+    # Clear previous labels
     for widget in output_frame.winfo_children():
         widget.destroy()
 
