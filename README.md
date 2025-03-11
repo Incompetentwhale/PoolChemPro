@@ -47,3 +47,6 @@ Click the Submit button to see the dynamic pool volume calculation and chemical 
 The adjustments are shown in a dedicated output frame within the GUI. If any input is invalid, an error message is displayed.
 ### Clear
 Clears all values easily.
+
+## Target Ranges
+**The target ranges are set to standard pool chemistry values, feel free to change at your own risk**
